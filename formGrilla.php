@@ -1,5 +1,5 @@
 <?php
-	require_once('clases/Personas.php');
+	require_once('PHP/clases/Personas.php');
 ?>
 <html>
 <head>
@@ -11,7 +11,7 @@
         <script SRC="js/controlGrilla.js" TYPE="text/javascript"></script>
         <!--final logica de programación-->
 </head>
-<body>
+<body ng-app="ABMangularPHP" ng-controller="controlGrilla">
  	<?php		
 		include_once"partes/barraDeMenu.php";
 	 ?>
@@ -35,7 +35,7 @@
 
 	<div class="container">
 		<div class="page-header">
-			<center><h3><?php echo $mensaje; ?></h3><h1> Ejemplo de Grilla</h1> </center>     
+			<center><h3><?php echo $mensaje; ?></h3><h1> Ejemplo de Grilla {{DatoTest}}</h1> </center>     
 		</div>
 		<div class="CajaInicio animated bounceInRight">
 			<h1>Listado de personas</h1>

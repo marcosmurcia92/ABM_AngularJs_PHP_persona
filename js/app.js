@@ -24,7 +24,7 @@ app.controller('controlAlta', function($scope, $http) {
   	console.log("persona a guardar:");
     console.log($scope.persona);
 
-    /*
+    
     $http.post('PHP/nexo.php', { datos: {accion :"insertar",persona:$scope.persona}})
  	  .then(function(respuesta) {     	
  		     //aca se ejetuca si retorno sin errores      	
@@ -35,7 +35,7 @@ app.controller('controlAlta', function($scope, $http) {
      		console.log( response);     			
  	  });
 
-  */
+  
 
   }
 });
@@ -43,18 +43,16 @@ app.controller('controlAlta', function($scope, $http) {
 
 app.controller('controlGrilla', function($scope, $http) {
   	$scope.DatoTest="**grilla**";
- 	
- /*	$http.get('PHP/nexo.php', { params: {accion :"traer"}})
- 	.then(function(respuesta) {     	
+ 	  console.log("Estoy en la Grilla");
 
-      	 $scope.ListadoPersonas = respuesta.data.listado;
-      	 console.log(respuesta.data);
-
-    },function errorCallback(response) {
-     		 $scope.ListadoPersonas= [];
-     		console.log( response);
-     		
- 	 });*/
+ 	$http.get('http://www.mocky.io/v2/57c8ab91120000e613e76a88')
+  .then(function(respuesta){
+    //CORRECTO
+    console.info("Volvio",respuesta.data);
+  },function(error){
+    //INCORRECTO
+    console.info("ERROR",error);
+  });
 
 
 
