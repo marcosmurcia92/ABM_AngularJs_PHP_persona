@@ -52,15 +52,22 @@
 		<div class="CajaInicio animated bounceInRight">
 			<h1> <!--?php echo $titulo; ?-->titulo </h1>
 
-			<form id="FormIngreso"  enctype="multipart/form-data" >
-				<input type="text" name="apellido" ng-model="persona.apellido" placeholder="ingrese apellido" value="" />
+			<form id="FormIngreso" name="FormIngreso" enctype="multipart/form-data" >
+				<input type="checkbox" ng-model="ver"><span>{{ver}}</span>
+				<input type="text"  name="apellido" ng-model="persona.apellido" placeholder="ingrese apellido" value="" required/>
 				<span id="lblApellido" style="display:none;color:#FF0000;width:1%;float:right;font-size:80">*
 				</span>
-				<input type="text" name="nombre" ng-model="persona.nombre" placeholder="ingrese nombre" value="" /> <span id="lblNombre" style="display:none;color:#FF0000;width:1%;float:right;font-size:80">*</span>
-				<input type="text" name="dni" ng-model="persona.dni" placeholder="ingrese dni" value=""     /> 
-				<span id="lblDni" style="display:none;color:#FF0000;width:1%;float:right;font-size:80">*</span>
-				<p style='color: black;'>*El DNI no se puede modificar.</p> ": "" ; ?>
+				<input type="text"  name="nombre" ng-model="persona.nombre" placeholder="ingrese nombre" value="" required/> <span id="lblNombre" style="display:none;color:#FF0000;width:1%;float:right;font-size:80">*</span>
+				<input type="email" id="correo" name="correo" ng-model="persona.correo" placeholder="ingrese correo" value=""  required  /> 
+				<span id="lblCorreo" style="display:none;color:#FF0000;width:1%;float:right;font-size:80">*</span>
+				<p style='color: red;' ng-if="correo.$invalid">*El Mail es invalido.</p> ": "" ; ?>
 				
+				<br>
+				<input type="password" ng-model="persona.password" name="pass1" placeholder="Password 1">
+				<br><br>
+				<input type="password" ng-model="persona.copiaPassword" name="pass2" placeholder="Password 2">
+				<br><br>
+
 				<input type="hidden" name="idOculto" id="id" value="" />
 				<!--
 				<input type="file" name="foto" />
@@ -69,8 +76,9 @@
 				<img  src="fotos/pordefecto.png" class="fotoform" id="foto"/>
 				<p style="  color: black;">*La foto se actualiza al guardar.</p>
 				-->
-
-				<a class="btn btn-info " name="guardar" ng-click="Guardar()" ><span class="glyphicon glyphicon-save">&nbsp;</span>Guardar</a>
+				<a class="btn btn-info " ng-disabled="FormIngreso.$invalid" ng-click="Guardar()" ><span class="glyphicon glyphicon-save">&nbsp;</span>Guardar</a>
+				<!-- <a class="btn btn-info " ng-disabled="(persona.password != persona.copiaPassword) || (persona.password=='' || persona.password==null) 
+				|| (persona.copiaPassword=='' || persona.copiaPassword==null)"  name="guardar" ng-click="Guardar()" ><span class="glyphicon glyphicon-save">&nbsp;</span>Guardar</a> -->
 					
 				<input type="hidden" value="" id="idParaModificar" name="agregar" />
 				<input type="hidden" value="" id="hdnAgregar" name="agregar" />

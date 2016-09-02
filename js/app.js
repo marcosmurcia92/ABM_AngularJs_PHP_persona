@@ -16,6 +16,7 @@ app.controller('controlAlta', function($scope, $http) {
  $scope.persona.dni= "12312312" ;
   $scope.persona.apellido= "natalia" ;
   $scope.persona.foto="sinfoto";
+  
 
 
   $scope.Guardar=function(){
@@ -45,12 +46,16 @@ app.controller('controlGrilla', function($scope, $http) {
   	$scope.DatoTest="**grilla**";
  	  console.log("Estoy en la Grilla");
 
+    $scope.ListadoPersonas = [];
+
  	$http.get('http://www.mocky.io/v2/57c8ab91120000e613e76a88')
   .then(function(respuesta){
     //CORRECTO
+    $scope.ListadoPersonas = respuesta.data;
     console.info("Volvio",respuesta.data);
   },function(error){
     //INCORRECTO
+    $scope.ListadoPersonas = [];
     console.info("ERROR",error);
   });
 
