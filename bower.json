@@ -1,0 +1,28 @@
+{
+  "name": "ABMAngularPHP",
+  "authors": [
+    "octavio <el.octavio.villegas@gmail.com>"
+  ],
+  "description": "ejemplo de estilos",
+  "main": "bootstrapAngular",
+  "keywords": [
+    "utnfra"
+  ],
+  "license": "MIT",
+  "homepage": "www.octavio.com.ar",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.8",
+    "bootstrap": "^3.3.7",
+    "components-font-awesome": "^4.6.3",
+    "angular-ui-router": "0.3.1",
+    "estilos": "https://github.com/octaviovillegas/estilos.git"
+  }
+}

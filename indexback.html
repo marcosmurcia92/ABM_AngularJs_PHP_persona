@@ -1,0 +1,76 @@
+<html>
+<head>
+	<title>ABM angular PHP</title>
+	  
+		<!--?php require_once"partes/referencias.php" ;/**/?-->
+		
+
+      <!--script type="text/javascript" src="./bower_components/jquery/dist/jquery.js"></script-->
+       	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="http://www.octavio.com.ar/favicon.ico">
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/estilo.css">
+	<link rel="stylesheet" type="text/css" href="css/animacion.css">
+	<!--final de Estilos-->    
+
+
+ 	<script SRC="bower_components/angular/angular.min.js" TYPE="text/javascript"></script>
+ 	<script SRC="js/app.js" TYPE="text/javascript"></script>
+	
+</head>
+<body ng-app="ABMangularPHP" ng-controller="controlMenu">
+	<!--?php		
+		require_once"partes/barraDeMenu.php";
+	 ?-->
+
+ 
+              <ul class="nav nav-tabs">
+		         <li  class="btn btn-info animated bounceInLeft" >
+		         	<a href="index.html">
+		         		 <span class="glyphicon glyphicon-list-alt">&nbsp;</span>
+		         		 Inicio 
+		         	</a>
+		         </li>
+		         <li class="btn btn-info animated bounceInLeft" >
+		         	<a href="formAlta.html">
+		         		<span class="glyphicon glyphicon-plus-sign">&nbsp;</span>
+		         		Alta
+		         	</a>
+		         </li>
+		         <li  class="btn btn-info animated bounceInLeft" >
+		         	<a href="formGrilla.html"> 
+		         		<span class="glyphicon glyphicon-th" >&nbsp;</span>
+		         			Grilla</a>
+		         		</li>
+		        	<span id="tituloBarra"  class="animated bounceInRight">{{DatoTest}}ABM - PHP - Angular Versión 1.0.1 &nbsp;&nbsp;&nbsp;</span>
+      </ul>
+		
+
+	
+	  <div class="container">
+		<div class="page-header">
+			<center><h1>ABM - PHP - Angular</h1> </center>     
+		</div>
+	  	 
+		           
+					<div class="CajaInicio animated bounceInRight">
+							<h1>PERSONAS</h1>
+						
+							<form id="FormIngreso">
+ 										
+									    <a href="formAlta.html" class="list-group-item  list-group-item list-group-item-info">
+									      <h4 class="list-group-item-heading">Alta de Personas</h4>
+									    </a>
+										
+										<a href="formGrilla.html" class="list-group-item  list-group-item list-group-item-info">
+									      <h4 class="list-group-item-heading">Grilla de Personas</h4>
+									    </a>
+									
+									  </div>
+									
+							</form>
+						</div>
+		</div>
+</body>
+</html>

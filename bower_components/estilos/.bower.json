@@ -1,0 +1,14 @@
+{
+  "name": "estilos",
+  "homepage": "https://github.com/octaviovillegas/estilos",
+  "_release": "75e65885a1",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "75e65885a1cf30867bc9e7e9c9299657419f587f"
+  },
+  "_source": "https://github.com/octaviovillegas/estilos.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/octaviovillegas/estilos.git",
+  "_direct": true
+}
