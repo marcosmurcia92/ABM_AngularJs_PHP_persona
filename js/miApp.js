@@ -61,8 +61,10 @@ miApp.controller("controlInicio",function($scope){
 
 });
 
-miApp.controller("controlPersonaMenu",function($scope){
-
+miApp.controller("controlPersonaMenu",function($scope,$state){
+	$scope.irAAlta=function(){
+		$state.go('persona.alta');
+	}
 });
 
 miApp.controller("controlPersonaAlta",function($scope){
