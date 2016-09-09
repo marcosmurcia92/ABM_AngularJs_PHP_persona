@@ -1,0 +1,53 @@
+<div class="container">
+		<div class="page-header">
+			<center><h1>ABM - PHP - Angular</h1> </center>     
+		</div>
+	  	 
+		           
+					<div class="CajaInicio animated bounceInRight">
+							<h1>Listado de personas</h1>
+							<!-- id="listaPersonas" -->
+								
+								<table class='table table-hover table-responsive' id="listaPersonas">
+									<thead>
+										<tr>
+											<th>  Foto   </th>				
+											<th>  Nombre     </th>
+											<th>  Apellido   </th>
+											<th>  Correo        </th>
+											<th>  Sexo        </th>
+											<th>  BORRAR     </th>
+											<th>  MODIFICAR  </th>
+										</tr> 
+									</thead>
+									
+									<tr ng-repeat="persona in ListadoPersonas">
+
+										<td><img  class='fotoGrilla' ng-src="{{persona.avatar}}" /></td>
+							
+										<td>{{persona.nombre}}</td>
+										<td>{{persona.apellido}}</td>
+										<td>{{persona.correo}}</td>
+										<td>{{persona.sexo}}</td>
+
+										<td><button class='btn btn-danger' name='Borrar' ng-click="Borrar(persona)">   <span class='glyphicon glyphicon-remove-circle'>&nbsp;</span>Borrar</button></td>
+										
+										<td><button class='btn btn-warning' name='Modificar' ng-click="Modificar(persona)"><span class='glyphicon glyphicon-edit'>&nbsp;</span>Modificar</button></td>
+															
+									</tr>
+										
+								</table>
+							</div>
+							<!--
+							<input type="search" ng-model="q" placeholder="Buscar personas..." aria-label="buscar personas" />
+							  <ul class="example-animate-container">
+							    <li class="animate-repeat" ng-repeat="persona in ListadoPersonas| filter:q as results">
+							      [{{$index + 1}}] {{persona.nombre}} who is {{persona.apellido}} years old.
+							    </li>
+							    <li class="animate-repeat" ng-if="results.length == 0">
+							      <strong>No results found...</strong>
+							    </li>
+							  </ul>
+							-->
+						</div>
+		</div>
