@@ -1,4 +1,18 @@
-/*Estilos para error
+//estilos para las validaciones
+
+input.ng-invalid {
+    background-color:red;
+}
+input.ng-valid {
+    background-color:yellow;
+}
+
+
+
+
+/*
+
+
 
 CSS Classes
 AngularJS adds CSS classes to forms and input fields depending on their states.
@@ -23,39 +37,23 @@ ng-valid-key One key for each validation. Example: ng-valid-required, useful whe
 ng-invalid-key Example: ng-invalid-required
 The classes are removed if the value they represent is false.
 
+
 */
-input.ng-invalid {
-    background-color: pink;
-}
-input.ng-valid {
-    background-color: lightgreen;
-}
 
-input[type="checkbox"]{
-  width: 100%;
-}
+input[type="text"],input[type="email"]  {
 
-input[type="text"]{
+
 
   display: block;
   color:black;
 height: 3em;
+width: 100%;
 }
 
-input[type="email"]{
+label{
 
-  display: block;
-  color:black;
-height: 3em;
+ color: black;
 }
-
-input[type="password"]{
-
-  display: block;
-  color:black;
-height: 3em;
-}
-
 .nav-tabs {
     border-bottom: 1px solid #151313 !important;
         background-color: rgba(0, 0, 0, 0.33);
@@ -70,10 +68,6 @@ li.btn {
   margin:0;
   padding:0;
   border-radius: 10px;
-}
-span
-{
-  color:black;
 }
 
 .table-hover>tbody>tr:hover {
@@ -129,13 +123,21 @@ caption {
 
 .CajaUno {
 
-  max-width: 30%;
-  width:400px;
-  margin:0 auto;
-  margin-top:8px;
-  margin-bottom:2%;
-  transition:opacity 1s;
-  -webkit-transition:opacity 1s;
+max-width: 30%;
+
+width:400px;
+
+margin:0 auto;
+
+margin-top:8px;
+
+margin-bottom:2%;
+
+margin-left: 60%;
+
+transition:opacity 1s;
+
+-webkit-transition:opacity 1s;
 }
 
 .CajaInicio {
@@ -148,20 +150,19 @@ caption {
 }
 
 .CajaEnunciado {
-  max-width: 30%;
+  max-width: 40%;
   border: dashed;
- position: fixed;
-background: royalblue;
-top: 0px;
-width: 400px;
-margin: 0;
-padding: 10px;
-
-margin-bottom: 2%;
-transition: opacity 1s;
--webkit-transition: opacity 1s;
-border-radius: 15px;
--webkit-border-radius: 15px;
+  position: fixed;
+  background: royalblue;
+  top: 150;
+  width: 400;
+  margin: 0;
+  padding: 10px;
+  margin-bottom: 2%;
+  transition: opacity 1s;
+  -webkit-transition: opacity 1s;
+  border-radius: 15px;
+  -webkit-border-radius: 15px;
 }
 
 .CajaInicio h1{
@@ -174,11 +175,12 @@ border-radius: 15px;
 }
 .CajaAbajo {
    margin-top: 100px;
-  width:400px;
-  top:0px;
-left:0px;
-  transition:opacity 1s;
-  -webkit-transition:opacity 1s;
+   margin-left: 60%;
+   width: 30%;
+   top:0px;
+   left:0px;
+   transition:opacity 1s;
+   -webkit-transition:opacity 1s;
 }
 .CajaArriva {
   margin-top: 20px;
@@ -291,7 +293,7 @@ background: linear-gradient(45deg, #1e5799 0%,#2989d8 16%,#2989d8 16%,#ffffff 36
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#7db9e8',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 color:black;
 }
-/*
+
 .MiBotonUTNLinea{
   max-width: 150px;
 position: absolute;
@@ -316,12 +318,12 @@ position: absolute;
   background:red;
 
 }
-*/
+
 .MiBotonUTNMenuInicio {
   display:block;
  
   border:hidden;
-  //width:150px;
+  width:150px;
   background:Blue;
   margin-top:1%;
   padding:6px;

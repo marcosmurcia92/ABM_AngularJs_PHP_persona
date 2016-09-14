@@ -123,13 +123,21 @@ caption {
 
 .CajaUno {
 
-  max-width: 30%;
-  width:400px;
-  margin:0 auto;
-  margin-top:8px;
-  margin-bottom:2%;
-  transition:opacity 1s;
-  -webkit-transition:opacity 1s;
+max-width: 30%;
+
+width:400px;
+
+margin:0 auto;
+
+margin-top:8px;
+
+margin-bottom:2%;
+
+margin-left: 60%;
+
+transition:opacity 1s;
+
+-webkit-transition:opacity 1s;
 }
 
 .CajaInicio {
@@ -142,20 +150,19 @@ caption {
 }
 
 .CajaEnunciado {
-  max-width: 30%;
+  max-width: 40%;
   border: dashed;
- position: fixed;
-background: royalblue;
-top: 0px;
-width: 400px;
-margin: 0;
-padding: 10px;
-
-margin-bottom: 2%;
-transition: opacity 1s;
--webkit-transition: opacity 1s;
-border-radius: 15px;
--webkit-border-radius: 15px;
+  position: fixed;
+  background: royalblue;
+  top: 150;
+  width: 400;
+  margin: 0;
+  padding: 10px;
+  margin-bottom: 2%;
+  transition: opacity 1s;
+  -webkit-transition: opacity 1s;
+  border-radius: 15px;
+  -webkit-border-radius: 15px;
 }
 
 .CajaInicio h1{
@@ -168,15 +175,16 @@ border-radius: 15px;
 }
 .CajaAbajo {
    margin-top: 100px;
-  width:400px;
-  top:0px;
-left:0px;
-  transition:opacity 1s;
-  -webkit-transition:opacity 1s;
+   margin-left: 60%;
+   width: 30%;
+   top:0px;
+   left:0px;
+   transition:opacity 1s;
+   -webkit-transition:opacity 1s;
 }
 .CajaArriva {
   margin-top: 20px;
-  width:400px;
+  width:100%;
   top:0px;
   left:0px;
   transition:opacity 1s;
@@ -234,7 +242,7 @@ select{
 .MiBotonUTN:hover{
   background:#1BA045;
 }
-/*
+
 .MiBotonUTNJuego {
   
   text-transform: capitalize;
@@ -254,7 +262,7 @@ select{
   transition:background .3s;
   -webkit-transition:background .3s;
 }
-*/
+
 .MiBotonUTNMenu {
   display:block;
   text-transform: capitalize;
@@ -285,7 +293,7 @@ background: linear-gradient(45deg, #1e5799 0%,#2989d8 16%,#2989d8 16%,#ffffff 36
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#7db9e8',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 color:black;
 }
-/*
+
 .MiBotonUTNLinea{
   max-width: 150px;
 position: absolute;
@@ -310,7 +318,7 @@ position: absolute;
   background:red;
 
 }
-*/
+
 .MiBotonUTNMenuInicio {
   display:block;
  

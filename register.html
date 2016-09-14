@@ -1,0 +1,61 @@
+<!-- Form Mixin-->
+<!-- Input Mixin-->
+<!-- Button Mixin-->
+
+<!-- Form Module-->
+<div class="module form-module">
+  
+  <div>
+  <button ui-sref="register()">Sign Up</button>
+  <button ui-sref="login()">Log In</button>
+  </div>
+  <div class="form">
+    <h2>Registrar una cuenta</h2>
+    <form name="FormRegistro" id="formRegistro">
+      <!-- <h3>Nombre:</h3>
+      <input type="text" name="nombre" ng-model="jugador.nombre" placeholder="Nombre" required/>
+      <h3>Apellido:</h3>
+      <input type="text" name="apellido" ng-model="jugador.apellido" placeholder="Apellido" required/>
+      <h3>Edad:</h3><br><br>
+      <span ng-show="(jugador.edad != null && jugador.fechaNac != null) && ((dateNow.getFullYear() - jugador.fechaNac.getFullYear()) != jugador.edad)">* La fecha de nacimiento no es coherente con esta edad.</span><br><br>
+      <input type="number" name="edad" min=18 max=99 ng-model="jugador.edad" placeholder="Edad" required/>
+      <h3>Sexo:</h3> <span ng-show="jugador.sexo == null"> * Elegir una opción </span><br><br>
+      <input type="radio" name="sexo" ng-model="jugador.sexo" value="masculino" ng-required="jugador.sexo == null"> Masculino <br>
+      <input type="radio" name="sexo" ng-model="jugador.sexo" value="femenino" ng-required="jugador.sexo == null"> Femenino <br>
+      <input type="radio" name="sexo" ng-model="jugador.sexo" value="otro" ng-required="jugador.sexo == null"> Otro <br>
+
+      <h3>Número de DNI:</h3>
+      <input type="number" name="dni" min=10000000 max=99999999 ng-model="jugador.dni" placeholder="DNI" required/> -->
+      <h3>Dirección de E-Mail:</h3>
+      <input type="email" name="email" ng-model="jugador.email" placeholder="E-mail" required/>
+      <!-- <h3>Estado Civil:</h3>
+      <select name="estado" ng-model="jugador.estadoC" required>
+        <option value="soltero">Soltero/a</option>
+        <option value="comprometido">Comprometido/a</option>
+        <option value="casado">Casado/a</option>
+        <option value="viudo">Viudo/a</option>
+      </select>
+      <h3>Fecha de Nacimiento:</h3><br><br>
+      <span ng-show="(jugador.edad != null && jugador.fechaNac != null) && ((dateNow.getFullYear() - jugador.fechaNac.getFullYear()) != jugador.edad)">* La edad no es coherente con esta fecha</span><br><span ng-show="(jugador.fechaNac != null) && (dateNow < jugador.fechaNac)">* La fecha no debe ser futura.</span><br>
+      <input type="date" name="fechaNac" ng-model="jugador.fechaNac" required/> -->
+      <h3>Contraseña (7 caracteres):</h3>
+      <input type="password" name="pass" minlength="7" ng-model="jugador.pass" placeholder="Password" required/>
+      <span ng-show="jugador.pass != jugador.passC">* Las contraseñas no coinciden.</span><br><br>
+      <h3>Confirmación de Contraseña:</h3>
+      <input type="password" name="passC" minlength="7" ng-model="jugador.passC" placeholder="Copia de Password" required/>
+      <!-- <h3>Lenguajes conocidos de Programación:</h3><br><br>
+      <span ng-show="(!jugador.langJS && !jugador.langHTML && !jugador.langAJS && !jugador.langCS && !jugador.langPHP)"> * Tildar al menos una opción </span><br><br>
+      <input type="checkbox" name="langJS" ng-model="jugador.langJS" value="Javascript" ng-required="(!jugador.langJS && !jugador.langHTML && !jugador.langAJS && !jugador.langCS && !jugador.langPHP)"/> JavaScript 
+      <input type="checkbox" name="langHTML" ng-model="jugador.langHTML" value="html" ng-required="(!jugador.langJS && !jugador.langHTML && !jugador.langAJS && !jugador.langCS && !jugador.langPHP)"/> HTML <br> 
+      <input type="checkbox" name="langAJS" ng-model="jugador.langAJS" value="angularJS" ng-required="(!jugador.langJS && !jugador.langHTML && !jugador.langAJS && !jugador.langCS && !jugador.langPHP)"/> AngularJS
+      <input type="checkbox" name="langCS" ng-model="jugador.langCS" value="cSharp" ng-required="(!jugador.langJS && !jugador.langHTML && !jugador.langAJS && !jugador.langCS && !jugador.langPHP)"/> C# <br> 
+      <input type="checkbox" name="langPHP" ng-model="jugador.langPHP" value="php" ng-required="(!jugador.langJS && !jugador.langHTML && !jugador.langAJS && !jugador.langCS && !jugador.langPHP)"/> PHP <br>  -->
+      <button ng-disabled="FormRegistro.$invalid || (jugador.pass != jugador.passC)"  ng-click="Registrar()">Registrar</button>
+      <!-- || ((jugador.edad != null && jugador.fechaNac != null) && ((dateNow.getFullYear() - jugador.fechaNac.getFullYear()) != jugador.edad)) || ((jugador.fechaNac != null) && (dateNow < jugador.fechaNac))" -->
+    </form>
+  </div>
+  <!-- <div class="cta"><a href="http://andytran.me">Forgot your password?</a></div> -->
+</div>
+<!-- <script src='http://codepen.io/andytran/pen/vLmRVp.js'></script> -->
+
+        

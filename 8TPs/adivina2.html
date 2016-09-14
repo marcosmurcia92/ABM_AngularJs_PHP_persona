@@ -1,0 +1,43 @@
+
+<div class="CajaUno animated bounceInDown">
+	
+
+	<form id="FormIngreso">
+
+		<input type="text"  placeholder="Ingrese número" id="numero" ng-model="numero">
+		
+		<br>
+		<input type="text"  placeholder="intentos" readonly id="intentos" ng-model="contadorIntentos">
+		<input type="text"  placeholder="Alerta" readonly ng-model="alerta">
+	</form>
+	
+</div>
+<div class="CajaUno animated bounceInLeft">
+	
+<button style="height:5em;" class="MiBotonUTN"  ng-click="verificar()" >Verificar</button>
+	
+	<button  class="MiBotonUTN" ng-click="comenzar()" >Comenzar</button>
+
+</div>
+
+<div class="CajaEnunciado animated bounceInLeft">
+	<h2>Enunciado:</h2>
+		<h3>
+			1.	Adivina el número (v 2.0):
+			En esta oportunidad el juego evaluará tus aptitudes a partir de la cantidad de intentos, por lo cual se informará lo siguiente:
+			<br>	1° intento: “usted es un Psíquico”.
+			<br>	2° intento: “excelente percepción”.
+			<br>	3° intento: “Esto es suerte”.
+			<br>	4° intento: “Excelente técnica”.
+			<br>	5° intento: “usted está en la media”.
+			<br>	Desde  6 Intentos hasta 10:”falta técnica”
+			<br>	Más de 10 intentos: “afortunado en el amor!!”.
+		</h3>
+	
+	
+</div>
+
+<div class="CajaAbajo animated bounceInUp">
+	<!-- <a  class="MiBotonUTNLinea" ui-sref="juegos()" >Men&uacute; ejercicios</a> -->
+	<input type="text"  placeholder="numero secreto"  ng-model="numeroSecreto">	
+</div>
