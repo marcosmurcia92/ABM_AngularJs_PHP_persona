@@ -4,7 +4,7 @@ input.ng-invalid {
     background-color:red;
 }
 input.ng-valid {
-    background-color:yellow;
+    background-color:lightGreen;
 }
 
 
@@ -39,6 +39,10 @@ The classes are removed if the value they represent is false.
 
 
 */
+
+.my-drop-zone { border: dotted 3px lightgray; }
+            .nv-file-over { border: dotted 3px red; } /* Default class applied to drop zones on over */
+            .another-file-over-class { border: dotted 3px green; }
 
 input[type="text"],input[type="email"]  {
 
@@ -110,7 +114,7 @@ li.btn {
 
 body {
   margin: 0 auto;
-  color:#f0f0f0;
+  color:#000000;
   background:#3f51b5;
   font-family:'Open Sans',sans-serif;
 }

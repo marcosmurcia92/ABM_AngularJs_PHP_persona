@@ -7,35 +7,49 @@
 		<div class="CajaInicio animated bounceInRight">
 			<h1> <!--?php echo $titulo; ?-->titulo </h1>
 
-			<form id="FormIngreso" name="FormIngreso" enctype="multipart/form-data" >
-				<input type="checkbox" ng-model="ver"><span>{{ver}}</span>
-				<input type="text"  name="apellido" ng-model="persona.apellido" placeholder="ingrese apellido" value="" required/>
+			<form id="FormIngreso"  enctype="multipart/form-data" >
+				<input type="text" name="apellido" ng-model="persona.apellido" placeholder="ingrese apellido" value="" />
 				<span id="lblApellido" style="display:none;color:#FF0000;width:1%;float:right;font-size:80">*
 				</span>
-				<input type="text"  name="nombre" ng-model="persona.nombre" placeholder="ingrese nombre" value="" required/> <span id="lblNombre" style="display:none;color:#FF0000;width:1%;float:right;font-size:80">*</span>
-				<input type="email" id="correo" name="correo" ng-model="persona.correo" placeholder="ingrese correo" value=""  required  /> 
-				<span id="lblCorreo" style="display:none;color:#FF0000;width:1%;float:right;font-size:80">*</span>
-				<p style='color: red;' ng-if="correo.$invalid">*El Mail es invalido.</p> ": "" ; ?>
-				
-				<br>
-				<input type="password" ng-model="persona.password" name="pass1" placeholder="Password 1">
+				<input type="text" name="nombre" ng-model="persona.nombre" placeholder="ingrese nombre" value="" /> <span id="lblNombre" style="display:none;color:#FF0000;width:1%;float:right;font-size:80">*</span>
+				<input type="text" name="dni" ng-model="persona.dni" placeholder="ingrese dni" value=""     /> 
+				<span id="lblDni" style="display:none;color:#FF0000;width:1%;float:right;font-size:80">*</span>
+				<div nv-file-drop="" uploader="SubidorDeArchivos">
+                    <div nv-file-over="" uploader="SubidorDeArchivos" over-class="another-file-over-class" class="well my-drop-zone">
+                        Arrastrá acá para subir una foto (max. 3)
+                    </div>
+                </div>
+				<!-- <input type="file" nv-file-select uploader="SubidorDeArchivos"/> -->
+				<li ng-repeat="item in SubidorDeArchivos.queue" >
+					<!-- nombre del archivo -->
+					Archivo: <span ng-bind="item.file.name"></span><br/>
+					<!-- imagen del archivo -->
+					<div ng-show="SubidorDeArchivos.isHTML5" ng-thumb="{ file: item._file, height: 100 }"></div>
+					<!-- boton upload. Lo puedo usar para carar las fotos o crear
+						mi propia funcion y llamar a SubidorDeArchivos.uploadAll() -->
+					<!-- <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+						<span class="glyphicon glyphicon-upload"></span> Upload
+					</button> -->
+
+					<!-- boton cancel -->            
+					<button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+						<span class="glyphicon glyphicon-ban-circle"></span> Cancel
+					</button>
+
+					<!-- boton remove -->
+					<button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+						<span class="glyphicon glyphicon-trash"></span> Remove
+					</button>
+				</li>  
 				<br><br>
-				<input type="password" ng-model="persona.copiaPassword" name="pass2" placeholder="Password 2">
-				<br><br>
 
-				<input type="hidden" name="idOculto" id="id" value="" />
-				<!--
-				<input type="file" name="foto" />
+				<!-- <img  ng-src="fotos/{{persona.foto}}" class="fotoform" id="foto" ng-model="persona.foto"/>
+				<p style="  color: black;">*La foto se actualiza al guardar.</p> -->
 
 
-				<img  src="fotos/pordefecto.png" class="fotoform" id="foto"/>
-				<p style="  color: black;">*La foto se actualiza al guardar.</p>
-				-->
-				<a class="btn btn-info " ng-disabled="FormIngreso.$invalid" ng-click="Guardar()" ><span class="glyphicon glyphicon-save">&nbsp;</span>Guardar</a>
-				<!-- <a class="btn btn-info " ng-disabled="(persona.password != persona.copiaPassword) || (persona.password=='' || persona.password==null) 
-				|| (persona.copiaPassword=='' || persona.copiaPassword==null)"  name="guardar" ng-click="Guardar()" ><span class="glyphicon glyphicon-save">&nbsp;</span>Guardar</a> -->
+				<a class="btn btn-info " name="guardar" ng-click="Guardar()" ><span class="glyphicon glyphicon-save">&nbsp;</span>Guardar</a>
 					
-				<input type="hidden" value="" id="idParaModificar" name="agregar" />
+				<input type="hidden" value="" id="idParaModificar" name="agregar" ng-model="persona.id"/>
 				<input type="hidden" value="" id="hdnAgregar" name="agregar" />
 				</div>
 

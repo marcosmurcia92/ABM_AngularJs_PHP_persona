@@ -6,7 +6,7 @@
 		           
 					<div class="CajaInicio animated bounceInRight">
 							<h1>Listado de personas</h1>
-							<!-- id="listaPersonas" -->
+								<input type="search" ng-model="buscador" placeholder="Buscar Usuario">							<!-- id="listaPersonas" -->
 								
 								<table class='table table-hover table-responsive' id="listaPersonas">
 									<thead>
@@ -14,40 +14,44 @@
 											<th>  Foto   </th>				
 											<th>  Nombre     </th>
 											<th>  Apellido   </th>
-											<th>  Correo        </th>
-											<th>  Sexo        </th>
+											<th>  Dni        </th>
 											<th>  BORRAR     </th>
 											<th>  MODIFICAR  </th>
+											<th>  PERFIL  </th>
 										</tr> 
 									</thead>
-									
-									<tr ng-repeat="persona in ListadoPersonas">
+									<tr ng-repeat="persona in ListadoPersonas | filter:buscador as resultado">
 
-										<td><img  class='fotoGrilla' ng-src="{{persona.avatar}}" /></td>
+										<td><img  class='fotoGrilla' ng-src="fotos/{{persona.foto}}" /></td>
 							
 										<td>{{persona.nombre}}</td>
 										<td>{{persona.apellido}}</td>
-										<td>{{persona.correo}}</td>
-										<td>{{persona.sexo}}</td>
+										<td>{{persona.dni}}</td>
 
 										<td><button class='btn btn-danger' name='Borrar' ng-click="Borrar(persona)">   <span class='glyphicon glyphicon-remove-circle'>&nbsp;</span>Borrar</button></td>
 										
-										<td><button class='btn btn-warning' name='Modificar' ng-click="Modificar(persona)"><span class='glyphicon glyphicon-edit'>&nbsp;</span>Modificar</button></td>
+										<td><button class='btn btn-warning' name='Modificar' ui-sref="persona.modificacion({id:persona.id, nombre:persona.nombre, apellido:persona.apellido, dni:persona.dni, foto:persona.foto})"><span class='glyphicon glyphicon-edit'>&nbsp;</span>Modificar</button></td>
+
+										<td><button class='btn btn-warning' name='Perfil' ui-sref="persona.perfil({id:persona.id, nombre:persona.nombre, apellido:persona.apellido, dni:persona.dni, foto:persona.foto})"><span class='glyphicon glyphicon-edit'>&nbsp;</span>Perfil</button></td>
 															
 									</tr>
+									<!--tr ng-if="resultado.length==0">
+
+										<td></td>
+							
+										<td>No hay personas con ese criterio</td>
+										<td></td>
+										<td></td>
+
+										<td></td>
 										
+										<td></td>
+															
+									</tr-->
 								</table>
+								<div ng-if="resultado.length==0">
+									No hay personas con ese critero.
+								</div>
 							</div>
-							<!--
-							<input type="search" ng-model="q" placeholder="Buscar personas..." aria-label="buscar personas" />
-							  <ul class="example-animate-container">
-							    <li class="animate-repeat" ng-repeat="persona in ListadoPersonas| filter:q as results">
-							      [{{$index + 1}}] {{persona.nombre}} who is {{persona.apellido}} years old.
-							    </li>
-							    <li class="animate-repeat" ng-if="results.length == 0">
-							      <strong>No results found...</strong>
-							    </li>
-							  </ul>
-							-->
+							
 						</div>
-		</div>

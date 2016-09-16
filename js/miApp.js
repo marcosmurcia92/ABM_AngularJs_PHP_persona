@@ -1,4 +1,4 @@
-var miApp = angular.module("AngularABM",['ui.router']);
+var miApp = angular.module("AngularABM",['ui.router','angularFileUpload']);
 
 miApp.config(function($stateProvider,$urlRouterProvider){
 	$stateProvider
@@ -113,7 +113,31 @@ miApp.config(function($stateProvider,$urlRouterProvider){
 				}
 			}
 		)
-	$urlRouterProvider.otherwise("/juegos/adivina1");
+		.state(
+			'persona.modificacion',
+			{
+				url: '/modificacion/{id}?:nombre:apellido:dni:foto',
+				views:{
+					"contenido":{
+						templateUrl: 'personaAlta.html',
+						controller: 'controlModificacion'
+					}
+				}
+			}
+		)
+		.state(
+			'persona.perfil',
+			{
+				url: '/perfil/{id}?:nombre:apellido:dni:foto',
+				views:{
+					"contenido":{
+						templateUrl: 'personaPerfil.html',
+						controller: 'controlPerfil'
+					}
+				}
+			}
+		)
+	$urlRouterProvider.otherwise("/inicio");
 });
 
 miApp.run(function($rootScope){
@@ -137,34 +161,46 @@ miApp.controller("controlPersonaMenu",function($scope,$state){
 	}
 });
 
-miApp.controller("controlPersonaAlta",function($scope){
+miApp.controller("controlPersonaAlta",function($scope,$state,FileUploader){
   $scope.DatoTest="**alta**";
+  
 
 //inicio las variables
+  $scope.SubidorDeArchivos=new FileUploader({url:'PHP/nexo.php'});
   $scope.persona={};
-  $scope.persona.nombre= "natalia" ;
- $scope.persona.dni= "12312312" ;
-  $scope.persona.apellido= "natalia" ;
-  $scope.persona.foto="sinfoto";
-  
+  $scope.persona.nombre= "" ;
+  $scope.persona.dni= "" ;
+  $scope.persona.apellido= "" ;
+  $scope.persona.foto="pordefecto.png";
+  //$scope.foto="fotos/pordefecto.png";
+  //$scope.persona.foto="fotos/pordefecto.png";
+  $scope.SubidorDeArchivos.onSuccessItem=function(item, response, status, headers)
+  {
+	$http.post('PHP/nexo.php', { datos: {accion :"insertar",persona:$scope.persona}})
+	  .then(function(respuesta) {     	
+			 //aca se ejetuca si retorno sin errores      	
+		 console.log(respuesta.data);
+		 $state.go("grilla");
+
+	},function errorCallback(response) {     		
+			//aca se ejecuta cuando hay errores
+			console.log( response);     			
+	  });
+	console.info("Ya guardé el archivo.", item, response, status, headers);
+  };
 
 
   $scope.Guardar=function(){
-
-
+	console.log($scope.SubidorDeArchivos.queue);
+	if($scope.SubidorDeArchivos.queue[0]!=undefined)
+	{
+		var nombreFoto = $scope.SubidorDeArchivos.queue[0]._file.name;
+		$scope.persona.foto=nombreFoto;
+	}
+	$scope.SubidorDeArchivos.uploadAll();
   	console.log("persona a guardar:");
     console.log($scope.persona);
-
-    
-    $http.post('PHP/nexo.php', { datos: {accion :"insertar",persona:$scope.persona}})
- 	  .then(function(respuesta) {     	
- 		     //aca se ejetuca si retorno sin errores      	
-      	 console.log(respuesta.data);
-
-    },function errorCallback(response) {     		
-     		//aca se ejecuta cuando hay errores
-     		console.log( response);     			
- 	  });
+	
 
   
 
@@ -173,29 +209,145 @@ miApp.controller("controlPersonaAlta",function($scope){
 
 miApp.controller("controlPersonaGrilla",function($scope,$http){
   	$scope.DatoTest="**grilla**";
- 	  console.log("Estoy en la Grilla");
+ 	
+ 	$http.get('PHP/nexo.php', { params: {accion :"traer"}})
+ 	.then(function(respuesta) {     	
 
-    $scope.ListadoPersonas = [];
+      	 $scope.ListadoPersonas = respuesta.data.listado;
+      	 console.log(respuesta.data);
 
- 	$http.get('http://www.mocky.io/v2/57c8ab91120000e613e76a88')
-  .then(function(respuesta){
-    //CORRECTO
-    $scope.ListadoPersonas = respuesta.data;
-    console.info("Volvio",respuesta.data);
-  },function(error){
-    //INCORRECTO
-    $scope.ListadoPersonas = [];
-    console.info("ERROR",error);
-  });
+    },function errorCallback(response) {
+     		 $scope.ListadoPersonas= [];
+     		console.log( response);
+     			/*
+
+					https://docs.angularjs.org/api/ng/service/$http
+
+     			the response object has these properties:
+
+				data – {string|Object} – The response body transformed with the transform functions.
+				status – {number} – HTTP status code of the response.
+				headers – {function([headerName])} – Header getter function.
+				config – {Object} – The configuration object that was used to generate the request.
+				statusText – {string} – HTTP status text of the response.
+						A response status code between 200 and 299 is considered a success
+						 status and will result in the success callback being called. 
+						 Note that if the response is a redirect, XMLHttpRequest will 
+						 transparently follow it, meaning that 
+						 the error callback will not be called for such responses.
+ 	 */
+ 	 });
+	/*$scope.Modificar=function(persona)
+	{
+		$state.go("modificacion", persona);
+	};*/
 
  	$scope.Borrar=function(persona){
 		console.log("borrar"+persona);
-	}
 
- 	$scope.Modificar=function(id){
- 		
- 		console.log("Modificar"+id);
+
+
+	$http.post("PHP/nexo.php",{datos:{accion :"borrar",persona:persona}},{headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+	 .then(function(respuesta) {       
+	         //aca se ejetuca si retorno sin errores        
+	         console.log(respuesta.data);
+			 $http.get('PHP/nexo.php', { params: {accion :"traer"}})
+			.then(function(respuesta) {     	
+
+				 $scope.ListadoPersonas = respuesta.data.listado;
+				 console.log(respuesta.data);
+
+			},function errorCallback(response) {
+					 $scope.ListadoPersonas= [];
+					console.log( response);
+			 });
+
+    },function errorCallback(response) {        
+        //aca se ejecuta cuando hay errores
+        console.log( response);           
+    });
+
+/*
+     $http.post('PHP/nexo.php', 
+      headers: 'Content-Type': 'application/x-www-form-urlencoded',
+      params: {accion :"borrar",persona:persona})
+    .then(function(respuesta) {       
+         //aca se ejetuca si retorno sin errores        
+         console.log(respuesta.data);
+
+    },function errorCallback(response) {        
+        //aca se ejecuta cuando hay errores
+        console.log( response);           
+    });
+
+*/
  	}
+
+
+
+
+ 	/*$scope.Modificar=function(persona){
+ 		$http.post('PHP/nexo.php', { datos: {accion :"modificar",persona:$scope.persona}})
+		  .then(function(respuesta) {     	
+				 //aca se ejetuca si retorno sin errores      	
+			 console.log(respuesta.data);
+			 location.href="formGrilla.html";
+
+		},function errorCallback(response) {     		
+				//aca se ejecuta cuando hay errores
+				console.log( response);     			
+		  });
+ 		/*console.log("Modificar"+id);
+		$http.post("PHP/nexo.php", {datos:{accion:"buscar", id:id}})
+		.then(function(respuesta)
+		{
+			var persona=respuesta.data;
+			$state.go("alta");//location.href="formAlta.html";
+			$scope.DatoTest=persona.nombre;
+			console.log(persona);
+		} ,function errorCallback(response) {        
+			//aca se ejecuta cuando hay errores
+			console.log(response);           
+		});
+ 	}*/
+});
+
+miApp.controller('controlModificacion', function($scope, $http, $state, $stateParams, FileUploader)//, $routeParams, $location)
+{
+	$scope.persona={};
+	$scope.DatoTest="**Modificar**";
+	$scope.SubidorDeArchivos=new FileUploader({url:'PHP/nexo.php'});
+	console.log($stateParams);//$scope.persona=$stateParams;
+	$scope.persona.id=$stateParams.id;
+	$scope.persona.nombre=$stateParams.nombre;
+	$scope.persona.apellido=$stateParams.apellido;
+	$scope.persona.dni=$stateParams.dni;
+	$scope.persona.foto=$stateParams.foto;
+	$scope.SubidorDeArchivos.onSuccessItem=function(item, response, status, headers)
+	{
+		$http.post('PHP/nexo.php', { datos: {accion :"modificar",persona:$scope.persona}})
+		.then(function(respuesta) 
+		{
+			//aca se ejetuca si retorno sin errores      	
+			console.log(respuesta.data);
+			$state.go("grilla");
+		},
+		function errorCallback(response)
+		{
+			//aca se ejecuta cuando hay errores
+			console.log( response);     			
+		});
+		console.info("Ya guardé el archivo.", item, response, status, headers);
+	};
+	$scope.Guardar=function(persona)
+	{
+		if($scope.SubidorDeArchivos.queue[0]!=undefined)
+		{
+			var nombreFoto = $scope.SubidorDeArchivos.queue[0]._file.name;
+			$scope.persona.foto=nombreFoto;
+		}
+		$scope.SubidorDeArchivos.uploadAll();
+	}
 });
 
 miApp.controller('LoginRegisterController', function($scope, $http) {//cuando se dispara la funcion automaticamente es referenciado al js y html

@@ -1,5 +1,5 @@
 
-var app = angular.module('ABMangularPHP', []);
+var app = angular.module('ABMangularPHP', ['angularFileUpload']);
 
 
 app.controller('controlMenu', function($scope, $http) {
@@ -7,7 +7,7 @@ app.controller('controlMenu', function($scope, $http) {
 });
 
 
-app.controller('controlAlta', function($scope, $http) {
+app.controller('controlAlta', function($scope, $http,$state,FileUploader) {
   $scope.DatoTest="**alta**";
 
 //inicio las variables
