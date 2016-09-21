@@ -1,5 +1,5 @@
 <?php
-require_once"accesoDatos.php";
+require_once"AccesoDatos.php";
 class Persona
 {
 //--------------------------------------------------------------------------------//
@@ -9,6 +9,8 @@ class Persona
  	public $apellido;
   	public $dni;
   	public $foto;
+  	public $foto2;
+  	public $foto3;
 
 //--------------------------------------------------------------------------------//
 
@@ -34,6 +36,19 @@ class Persona
 	{
 		return $this->foto;
 	}
+	public function GetFoto2(){
+		return $this->foto2;
+	}
+	public function GetFoto3(){
+		return $this->foto3;
+	}
+	public function GetArrayFotos(){
+		$arrayFotos = array();
+		$arrayFotos[] = $this->foto;
+		$arrayFotos[] = $this->foto2;
+		$arrayFotos[] = $this->foto3;
+		return $arrayFotos;
+	}
 
 	public function SetId($valor)
 	{
@@ -55,6 +70,14 @@ class Persona
 	{
 		$this->foto = $valor;
 	}
+	public function SetFoto2($valor)
+	{
+		$this->foto2 = $valor;
+	}
+	public function SetFoto3($valor)
+	{
+		$this->foto3 = $valor;
+	}
 //--------------------------------------------------------------------------------//
 //--CONSTRUCTOR
 	public function __construct($dni=NULL)
@@ -66,6 +89,8 @@ class Persona
 			$this->nombre = $obj->nombre;
 			$this->dni = $dni;
 			$this->foto = $obj->foto;
+			$this->foto2 = $obj->foto2;
+			$this->foto3 = $obj->foto3;
 		}
 	}
 
@@ -73,7 +98,7 @@ class Persona
 //--TOSTRING	
   	public function ToString()
 	{
-	  	return $this->apellido."-".$this->nombre."-".$this->dni."-".$this->foto;
+	  	return $this->apellido."-".$this->nombre."-".$this->dni."-".$this->foto."-".$this->foto2."-".$this->foto3;
 	}
 //--------------------------------------------------------------------------------//
 
@@ -124,11 +149,13 @@ class Persona
 				foto=:foto
 				WHERE id=:id");
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();*/ 
-			$consulta =$objetoAccesoDato->RetornarConsulta("CALL ModificarPersona(:id,:nombre,:apellido,:foto)");
+			$consulta =$objetoAccesoDato->RetornarConsulta("CALL ModificarPersona(:id,:nombre,:apellido,:foto,:foto2,:foto3)");
 			$consulta->bindValue(':id',$persona->id, PDO::PARAM_INT);
 			$consulta->bindValue(':nombre',$persona->nombre, PDO::PARAM_STR);
 			$consulta->bindValue(':apellido', $persona->apellido, PDO::PARAM_STR);
 			$consulta->bindValue(':foto', $persona->foto, PDO::PARAM_STR);
+			$consulta->bindValue(':foto2', $persona->foto2, PDO::PARAM_STR);
+			$consulta->bindValue(':foto3', $persona->foto3, PDO::PARAM_STR);
 			return $consulta->execute();
 	}
 
@@ -140,11 +167,13 @@ class Persona
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 		//$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into persona (nombre,apellido,dni,foto)values(:nombre,:apellido,:dni,:foto)");
-		$consulta =$objetoAccesoDato->RetornarConsulta("CALL InsertarPersona (:nombre,:apellido,:dni,:foto)");
+		$consulta =$objetoAccesoDato->RetornarConsulta("CALL InsertarPersona (:nombre,:apellido,:dni,:foto,:foto2,:foto3)");
 		$consulta->bindValue(':nombre',$persona->nombre, PDO::PARAM_STR);
 		$consulta->bindValue(':apellido', $persona->apellido, PDO::PARAM_STR);
 		$consulta->bindValue(':dni', $persona->dni, PDO::PARAM_STR);
 		$consulta->bindValue(':foto', $persona->foto, PDO::PARAM_STR);
+		$consulta->bindValue(':foto2', $persona->foto2, PDO::PARAM_STR);
+		$consulta->bindValue(':foto3', $persona->foto3, PDO::PARAM_STR);
 		$consulta->execute();		
 		return $objetoAccesoDato->RetornarUltimoIdInsertado();
 	
@@ -164,6 +193,8 @@ class Persona
 		$persona->apellido = "agua";
 		$persona->dni = "333333";
 		$persona->foto = "333333.jpg";
+		$persona->foto2 = "333333.jpg";
+		$persona->foto3 = "333333.jpg";
 
 		//$objetJson = json_encode($persona);
 		//echo $objetJson;
@@ -173,6 +204,8 @@ class Persona
 		$persona2->apellido = "giratoria";
 		$persona2->dni = "222222";
 		$persona2->foto = "222222.jpg";
+		$persona2->foto2 = "222222.jpg";
+		$persona2->foto3 = "222222.jpg";
 
 		$persona3 = new stdClass();
 		$persona3->id = "6";
@@ -180,6 +213,8 @@ class Persona
 		$persona3->apellido = "Roberto";
 		$persona3->dni = "888888";
 		$persona3->foto = "888888.jpg";
+		$persona3->foto2 = "888888.jpg";
+		$persona3->foto3 = "888888.jpg";
 
 		$arrayDePersonas[]=$persona;
 		$arrayDePersonas[]=$persona2;

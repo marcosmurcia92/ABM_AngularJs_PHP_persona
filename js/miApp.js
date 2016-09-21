@@ -116,7 +116,7 @@ miApp.config(function($stateProvider,$urlRouterProvider){
 		.state(
 			'persona.modificacion',
 			{
-				url: '/modificacion/{id}?:nombre:apellido:dni:foto',
+				url: '/modificacion/{id}?:nombre:apellido:dni:foto:foto2:foto3',
 				views:{
 					"contenido":{
 						templateUrl: 'personaAlta.html',
@@ -128,7 +128,7 @@ miApp.config(function($stateProvider,$urlRouterProvider){
 		.state(
 			'persona.perfil',
 			{
-				url: '/perfil/{id}?:nombre:apellido:dni:foto',
+				url: '/perfil/{id}?:nombre:apellido:dni:foto:foto2:foto3',
 				views:{
 					"contenido":{
 						templateUrl: 'personaPerfil.html',
@@ -152,6 +152,19 @@ miApp.controller("controlInicio",function($scope){
 
 });
 
+miApp.controller("controlPerfil",function($scope,$state,$stateParams){
+	$scope.persona = {};
+	$scope.persona.id=$stateParams.id;
+	$scope.persona.nombre=$stateParams.nombre;
+	$scope.persona.apellido=$stateParams.apellido;
+	$scope.persona.dni=$stateParams.dni;
+	$scope.persona.foto=$stateParams.foto;
+	$scope.persona.foto2=$stateParams.foto2;
+	$scope.persona.foto3=$stateParams.foto3;
+
+
+});
+
 miApp.controller("controlPersonaMenu",function($scope,$state){
 	$scope.irAAlta=function(){
 		$state.go('persona.alta');
@@ -161,32 +174,46 @@ miApp.controller("controlPersonaMenu",function($scope,$state){
 	}
 });
 
-miApp.controller("controlPersonaAlta",function($scope,$state,FileUploader){
+miApp.controller("controlPersonaAlta",function($scope,$state,$http,FileUploader){
   $scope.DatoTest="**alta**";
   
 
 //inicio las variables
-  $scope.SubidorDeArchivos=new FileUploader({url:'PHP/nexo.php'});
+  $scope.SubidorDeArchivos=new FileUploader({url:'PHP/nexoFoto.php'});
+  $scope.SubidorDeArchivos.queueLimit = 3;
   $scope.persona={};
   $scope.persona.nombre= "" ;
   $scope.persona.dni= "" ;
   $scope.persona.apellido= "" ;
   $scope.persona.foto="pordefecto.png";
+  $scope.persona.foto2="pordefecto.png";
+  $scope.persona.foto3="pordefecto.png";
   //$scope.foto="fotos/pordefecto.png";
   //$scope.persona.foto="fotos/pordefecto.png";
   $scope.SubidorDeArchivos.onSuccessItem=function(item, response, status, headers)
   {
-	$http.post('PHP/nexo.php', { datos: {accion :"insertar",persona:$scope.persona}})
+	console.info("Ya guardé el archivo.", item, response, status, headers);
+  };
+
+  $scope.SubidorDeArchivos.onCompleteAll =function()
+  {
+	$http.post('PHP/nexoInsertar.php', { datos: {accion :"insertar",persona:$scope.persona}})
 	  .then(function(respuesta) {     	
 			 //aca se ejetuca si retorno sin errores      	
 		 console.log(respuesta.data);
-		 $state.go("grilla");
+		 $state.go("persona.perfil",{
+		 	id:respuesta.data.id, 
+		 	nombre:respuesta.data.nombre,
+		 	apellido:respuesta.data.apellido,
+		 	dni:respuesta.data.dni, 
+		 	foto:respuesta.data.foto,
+		 	foto2:respuesta.data.foto2,
+		 	foto3:respuesta.data.foto3});
 
 	},function errorCallback(response) {     		
 			//aca se ejecuta cuando hay errores
 			console.log( response);     			
 	  });
-	console.info("Ya guardé el archivo.", item, response, status, headers);
   };
 
 
@@ -197,12 +224,19 @@ miApp.controller("controlPersonaAlta",function($scope,$state,FileUploader){
 		var nombreFoto = $scope.SubidorDeArchivos.queue[0]._file.name;
 		$scope.persona.foto=nombreFoto;
 	}
+	if($scope.SubidorDeArchivos.queue[1]!=undefined)
+	{
+		var nombreFoto2 = $scope.SubidorDeArchivos.queue[1]._file.name;
+		$scope.persona.foto2=nombreFoto2;
+	}
+	if($scope.SubidorDeArchivos.queue[2]!=undefined)
+	{
+		var nombreFoto3 = $scope.SubidorDeArchivos.queue[2]._file.name;
+		$scope.persona.foto3=nombreFoto3;
+	}
 	$scope.SubidorDeArchivos.uploadAll();
   	console.log("persona a guardar:");
     console.log($scope.persona);
-	
-
-  
 
   }
 });
@@ -210,7 +244,7 @@ miApp.controller("controlPersonaAlta",function($scope,$state,FileUploader){
 miApp.controller("controlPersonaGrilla",function($scope,$http){
   	$scope.DatoTest="**grilla**";
  	
- 	$http.get('PHP/nexo.php', { params: {accion :"traer"}})
+ 	$http.get('PHP/nexoTraer.php', { params: {accion :"traer"}})
  	.then(function(respuesta) {     	
 
       	 $scope.ListadoPersonas = respuesta.data.listado;
@@ -247,11 +281,11 @@ miApp.controller("controlPersonaGrilla",function($scope,$http){
 
 
 
-	$http.post("PHP/nexo.php",{datos:{accion :"borrar",persona:persona}},{headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+	$http.post("PHP/nexoBorrar.php",{datos:{accion :"borrar",persona:persona}},{headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
 	 .then(function(respuesta) {       
 	         //aca se ejetuca si retorno sin errores        
 	         console.log(respuesta.data);
-			 $http.get('PHP/nexo.php', { params: {accion :"traer"}})
+			 $http.get('PHP/nexoTraer.php', { params: {accion :"traer"}})
 			.then(function(respuesta) {     	
 
 				 $scope.ListadoPersonas = respuesta.data.listado;
@@ -268,7 +302,7 @@ miApp.controller("controlPersonaGrilla",function($scope,$http){
     });
 
 /*
-     $http.post('PHP/nexo.php', 
+     $http.post('PHP/nexoBorrar.php', 
       headers: 'Content-Type': 'application/x-www-form-urlencoded',
       params: {accion :"borrar",persona:persona})
     .then(function(respuesta) {       
@@ -287,7 +321,7 @@ miApp.controller("controlPersonaGrilla",function($scope,$http){
 
 
  	/*$scope.Modificar=function(persona){
- 		$http.post('PHP/nexo.php', { datos: {accion :"modificar",persona:$scope.persona}})
+ 		$http.post('PHP/nexoModificar.php', { datos: {accion :"modificar",persona:$scope.persona}})
 		  .then(function(respuesta) {     	
 				 //aca se ejetuca si retorno sin errores      	
 			 console.log(respuesta.data);
@@ -298,7 +332,7 @@ miApp.controller("controlPersonaGrilla",function($scope,$http){
 				console.log( response);     			
 		  });
  		/*console.log("Modificar"+id);
-		$http.post("PHP/nexo.php", {datos:{accion:"buscar", id:id}})
+		$http.post("PHP/nexoBuscar.php", {datos:{accion:"buscar", id:id}})
 		.then(function(respuesta)
 		{
 			var persona=respuesta.data;
@@ -316,16 +350,18 @@ miApp.controller('controlModificacion', function($scope, $http, $state, $statePa
 {
 	$scope.persona={};
 	$scope.DatoTest="**Modificar**";
-	$scope.SubidorDeArchivos=new FileUploader({url:'PHP/nexo.php'});
+	$scope.SubidorDeArchivos=new FileUploader({url:'PHP/nexoFoto.php'});
 	console.log($stateParams);//$scope.persona=$stateParams;
 	$scope.persona.id=$stateParams.id;
 	$scope.persona.nombre=$stateParams.nombre;
 	$scope.persona.apellido=$stateParams.apellido;
 	$scope.persona.dni=$stateParams.dni;
 	$scope.persona.foto=$stateParams.foto;
+	$scope.persona.foto2=$stateParams.foto2;
+	$scope.persona.foto3=$stateParams.foto3;
 	$scope.SubidorDeArchivos.onSuccessItem=function(item, response, status, headers)
 	{
-		$http.post('PHP/nexo.php', { datos: {accion :"modificar",persona:$scope.persona}})
+		$http.post('PHP/nexoModificar.php', { datos: {accion :"modificar",persona:$scope.persona}})
 		.then(function(respuesta) 
 		{
 			//aca se ejetuca si retorno sin errores      	
