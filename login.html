@@ -11,9 +11,9 @@
   <div class="form">
     <h2>Ingrese a su cuenta</h2>
     <form name="FormLogin" id="formLogin">
-      <input type="email" name="loginEmail" ng-model="login.email" placeholder="E-mail..." required/>
-      <input type="password" name="loginPass" ng-model="login.password" placeholder="Password..." required/>
-      <button ng-disabled="FormLogin.$invalid" ng-click="Loguear()">Conectar</button>
+      <input type="email" name="loginEmail" ng-model="usuario.correo" placeholder="E-mail..." required/>
+      <input type="password" name="loginPass" ng-model="usuario.clave" placeholder="Password..." required/>
+      <button ng-disabled="FormLogin.$invalid" ng-click="IniciarSesion()">Conectar</button>
     </form>
   </div>
   <!-- <div class="cta"><a href="http://andytran.me">Forgot your password?</a></div> -->

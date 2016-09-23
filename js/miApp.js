@@ -1,6 +1,16 @@
-var miApp = angular.module("AngularABM",['ui.router','angularFileUpload']);
+var miApp = angular.module("AngularABM",['ui.router','angularFileUpload','satellizer']);
 
-miApp.config(function($stateProvider,$urlRouterProvider){
+miApp.config(function($stateProvider,$urlRouterProvider,$authProvider){
+
+	$authProvider.loginUrl= 'Angular_ABM_Murcia/jwt/php/auth.php';
+	$authProvider.tokenName = 'MiTokenGeneradoEnPHP';
+	$authProvider.tokenPrefix = 'Aplicacion';
+	$authProvider.authHeader = 'data';
+
+	$authProvider.github({
+      clientId: 'd69b1192a7e78b5ee9ff'
+    });
+
 	$stateProvider
 		.state(
 			"inicio",
@@ -15,7 +25,7 @@ miApp.config(function($stateProvider,$urlRouterProvider){
 			{
 				url:'/login',
 				templateUrl:'login.html',
-				controller:"LoginRegisterController"
+				controller:"LoginController"
 			}
 		)
 		.state(
@@ -23,7 +33,7 @@ miApp.config(function($stateProvider,$urlRouterProvider){
 			{
 				url:'/register',
 				templateUrl:'register.html',
-				controller:"LoginRegisterController"
+				controller:"RegisterController"
 			}
 		)
 		.state(
@@ -382,11 +392,48 @@ miApp.controller('controlModificacion', function($scope, $http, $state, $statePa
 			var nombreFoto = $scope.SubidorDeArchivos.queue[0]._file.name;
 			$scope.persona.foto=nombreFoto;
 		}
+		if($scope.SubidorDeArchivos.queue[1]!=undefined)
+		{
+			var nombreFoto2 = $scope.SubidorDeArchivos.queue[1]._file.name;
+			$scope.persona.foto2=nombreFoto2;
+		}
+		if($scope.SubidorDeArchivos.queue[2]!=undefined)
+		{
+			var nombreFoto3 = $scope.SubidorDeArchivos.queue[2]._file.name;
+			$scope.persona.foto3=nombreFoto3;
+		}
 		$scope.SubidorDeArchivos.uploadAll();
 	}
 });
 
-miApp.controller('LoginRegisterController', function($scope, $http) {//cuando se dispara la funcion automaticamente es referenciado al js y html
+miApp.controller('LoginController', function($scope, $http, $auth) {//cuando se dispara la funcion automaticamente es referenciado al js y html
+  	
+	$scope.usuario = {};
+	$scope.usuario.clave = "la clave";
+	$scope.usuario.correo = "el correo";
+
+	if($auth.isAuthenticated()){
+		console.info("token",$auth.getPayload());
+		console.info("token2",$auth.getToken());
+	}else{
+		console.info("no token",$auth.getPayload());
+		console.info("no token2",$auth.getToken());
+	}
+
+  	$scope.IniciarSesion = function(){
+  		//ESTO ES UNA LLAMADA TIPO HTTP
+  		$auth.login($scope.usuario)
+		  .then(function(response) {
+		  	console.info("Correcto",response);
+		  })
+		  .catch(function(response) {
+		  	console.info("Error",response);
+		  });
+  	}
+  	
+ });
+
+miApp.controller('RegisterController', function($scope, $http) {//cuando se dispara la funcion automaticamente es referenciado al js y html
   	
   	$scope.dateNow = new Date();
   	console.log($scope.dateNow);
