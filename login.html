@@ -4,17 +4,23 @@
 
 <!-- Form Module-->
 <div class="module form-module">
-  <div>
+  <div ng-show="!isAuthenticated">
   <button  ui-sref="register()">Sign Up</button>
   <button ui-sref="login()">Log In</button>
   </div>
-  <div class="form">
+  <div ng-show="!isAuthenticated" class="form">
     <h2>Ingrese a su cuenta</h2>
     <form name="FormLogin" id="formLogin">
       <input type="email" name="loginEmail" ng-model="usuario.correo" placeholder="E-mail..." required/>
       <input type="password" name="loginPass" ng-model="usuario.clave" placeholder="Password..." required/>
       <button ng-disabled="FormLogin.$invalid" ng-click="IniciarSesion()">Conectar</button>
     </form>
+      <button ng-click="LoginGitHub()">Github Login</button>
+  </div>
+
+  <div ng-show="isAuthenticated" class="form">
+    <h2>Usted ya se encuentra conectado</h2>
+      <button ng-click="GoToMenu()">Ir a Inicio</button>
   </div>
   <!-- <div class="cta"><a href="http://andytran.me">Forgot your password?</a></div> -->
 </div>

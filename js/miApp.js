@@ -2,13 +2,15 @@ var miApp = angular.module("AngularABM",['ui.router','angularFileUpload','satell
 
 miApp.config(function($stateProvider,$urlRouterProvider,$authProvider){
 
-	$authProvider.loginUrl= 'Angular_ABM_Murcia/jwt/php/auth.php';
+	$authProvider.loginUrl= 'ABM_AngularJs_PHP_persona/jwt/php/auth.php';
 	$authProvider.tokenName = 'MiTokenGeneradoEnPHP';
 	$authProvider.tokenPrefix = 'Aplicacion';
 	$authProvider.authHeader = 'data';
 
 	$authProvider.github({
-      clientId: 'd69b1192a7e78b5ee9ff'
+      clientId: 'd69b1192a7e78b5ee9ff',
+      responseType: 'token',
+      redirectUri: ''
     });
 
 	$stateProvider
@@ -50,7 +52,8 @@ miApp.config(function($stateProvider,$urlRouterProvider,$authProvider){
 				url:'/menu',
 				views:{
 					"juegoContenido":{
-						templateUrl:'8TPs/juegosMenu.html'
+						templateUrl:'8TPs/juegosMenu.html',
+						controller:'controlJuegosMenu'
 					}
 				}
 			}
@@ -162,7 +165,12 @@ miApp.controller("controlInicio",function($scope){
 
 });
 
-miApp.controller("controlPerfil",function($scope,$state,$stateParams){
+miApp.controller("controlPerfil",function($scope,$state,$auth,$stateParams){
+
+	if(!$auth.isAuthenticated()){
+		$state.go("login");
+	}
+
 	$scope.persona = {};
 	$scope.persona.id=$stateParams.id;
 	$scope.persona.nombre=$stateParams.nombre;
@@ -175,7 +183,12 @@ miApp.controller("controlPerfil",function($scope,$state,$stateParams){
 
 });
 
-miApp.controller("controlPersonaMenu",function($scope,$state){
+miApp.controller("controlPersonaMenu",function($scope,$state,$auth){
+
+	if(!$auth.isAuthenticated()){
+		$state.go("login");
+	}
+
 	$scope.irAAlta=function(){
 		$state.go('persona.alta');
 	}
@@ -184,7 +197,12 @@ miApp.controller("controlPersonaMenu",function($scope,$state){
 	}
 });
 
-miApp.controller("controlPersonaAlta",function($scope,$state,$http,FileUploader){
+miApp.controller("controlPersonaAlta",function($scope,$state,$auth,$http,FileUploader){
+
+	if(!$auth.isAuthenticated()){
+		$state.go("login");
+	}
+
   $scope.DatoTest="**alta**";
   
 
@@ -251,7 +269,11 @@ miApp.controller("controlPersonaAlta",function($scope,$state,$http,FileUploader)
   }
 });
 
-miApp.controller("controlPersonaGrilla",function($scope,$http){
+miApp.controller("controlPersonaGrilla",function($scope,$http,$state,$auth){
+	if(!$auth.isAuthenticated()){
+		$state.go("login");
+	}
+
   	$scope.DatoTest="**grilla**";
  	
  	$http.get('PHP/nexoTraer.php', { params: {accion :"traer"}})
@@ -356,8 +378,12 @@ miApp.controller("controlPersonaGrilla",function($scope,$http){
  	}*/
 });
 
-miApp.controller('controlModificacion', function($scope, $http, $state, $stateParams, FileUploader)//, $routeParams, $location)
+miApp.controller('controlModificacion', function($scope, $http, $state, $auth, $stateParams, FileUploader)//, $routeParams, $location)
 {
+	if(!$auth.isAuthenticated()){
+		$state.go("login");
+	}
+
 	$scope.persona={};
 	$scope.DatoTest="**Modificar**";
 	$scope.SubidorDeArchivos=new FileUploader({url:'PHP/nexoFoto.php'});
@@ -406,11 +432,13 @@ miApp.controller('controlModificacion', function($scope, $http, $state, $statePa
 	}
 });
 
-miApp.controller('LoginController', function($scope, $http, $auth) {//cuando se dispara la funcion automaticamente es referenciado al js y html
+miApp.controller('LoginController', function($scope, $http, $auth) {
   	
 	$scope.usuario = {};
 	$scope.usuario.clave = "la clave";
 	$scope.usuario.correo = "el correo";
+
+	$scope.isAuthenticated = $auth.isAuthenticated();
 
 	if($auth.isAuthenticated()){
 		console.info("token",$auth.getPayload());
@@ -430,10 +458,20 @@ miApp.controller('LoginController', function($scope, $http, $auth) {//cuando se 
 		  	console.info("Error",response);
 		  });
   	}
+
+  	$scope.LoginGitHub = function(){
+  		$auth.authenticate('github')
+  		.then(function(success) {
+          console.info("Success",success);
+        })
+        .catch(function(error) {
+          console.info("ERROR",error);
+        });
+  	}
   	
  });
 
-miApp.controller('RegisterController', function($scope, $http) {//cuando se dispara la funcion automaticamente es referenciado al js y html
+miApp.controller('RegisterController', function($scope, $http) {
   	
   	$scope.dateNow = new Date();
   	console.log($scope.dateNow);
@@ -441,7 +479,19 @@ miApp.controller('RegisterController', function($scope, $http) {//cuando se disp
 	$scope.jugador.estadoC="empty";*/
  });
 
-miApp.controller('controlAdivina', function($scope, $http) {//cuando se dispara la funcion automaticamente es referenciado al js y html
+miApp.controller('controlJuegosMenu', function($scope,$state,$auth, $http) {
+  
+  	if(!$auth.isAuthenticated()){
+		$state.go("login");
+	}
+});
+
+miApp.controller('controlAdivina', function($scope,$state,$auth, $http) {
+  
+  	if(!$auth.isAuthenticated()){
+		$state.go("login");
+	}
+
   $scope.numeroSecreto=0;
    $scope.contadorIntentos=0;
    $scope.resultadoF=3;
@@ -471,7 +521,12 @@ miApp.controller('controlAdivina', function($scope, $http) {//cuando se dispara 
 	}
 });
 
-miApp.controller('controlAdivina2', function($scope, $http) {//cuando se dispara la funcion automaticamente es referenciado al js y html
+miApp.controller('controlAdivina2', function($scope,$state,$auth, $http) {//cuando se dispara la funcion automaticamente es referenciado al js y html
+  
+	if(!$auth.isAuthenticated()){
+		$state.go("login");
+	}
+
   $scope.numeroSecreto=0;
    $scope.contadorIntentos=0;
    $scope.resultadoF=3;
