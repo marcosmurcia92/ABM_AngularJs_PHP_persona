@@ -205,7 +205,7 @@ miApp.controller("controlPersonaMenu",function($scope,$state,$auth){
 	}
 });
 
-miApp.controller("controlPersonaAlta",function($scope,$state,$auth,$http,FileUploader){
+miApp.controller("controlPersonaAlta",function($scope,$state,$auth,$http,FileUploader,personasSrv){
 
 	if(!$auth.isAuthenticated()){
 		$state.go("login");
@@ -215,7 +215,7 @@ miApp.controller("controlPersonaAlta",function($scope,$state,$auth,$http,FileUpl
   
 
 //inicio las variables
-  $scope.SubidorDeArchivos=new FileUploader({url:'http://marcosmurciautn.hol.es/ws1/PHP/nexoFoto.php'});
+  $scope.SubidorDeArchivos=new FileUploader({url:personasSrv.TraerUrlFotos()});
   $scope.SubidorDeArchivos.queueLimit = 3;
   $scope.persona={};
   $scope.persona.nombre= "" ;
@@ -233,7 +233,8 @@ miApp.controller("controlPersonaAlta",function($scope,$state,$auth,$http,FileUpl
 
   $scope.SubidorDeArchivos.onCompleteAll =function()
   {
-	$http.post('http://marcosmurciautn.hol.es/ws1/persona/'+ JSON.stringify($scope.persona))
+  	personasSrv.AltaPersona(JSON.stringify($scope.persona))
+	//$http.post('http://marcosmurciautn.hol.es/ws1/persona/'+ JSON.stringify($scope.persona))
 	  .then(function(respuesta) {     	
 			 //aca se ejetuca si retorno sin errores      	
 		 console.log(respuesta.data);
@@ -277,14 +278,15 @@ miApp.controller("controlPersonaAlta",function($scope,$state,$auth,$http,FileUpl
   }
 });
 
-miApp.controller("controlPersonaGrilla",function($scope,$http,$state,$auth){
+miApp.controller("controlPersonaGrilla",function($scope,$http,$state,$auth,personasSrv){
 	if(!$auth.isAuthenticated()){
 		$state.go("login");
 	}
 
   	$scope.DatoTest="**grilla**";
  	
- 	$http.get('http://marcosmurciautn.hol.es/ws1/personas/', { params: {accion :"traer"}})
+ 	personasSrv.TraerTodos()
+ 	// $http.get('http://marcosmurciautn.hol.es/ws1/personas/', { params: {accion :"traer"}})
  	.then(function(respuesta) {     	
 
       	 $scope.ListadoPersonas = respuesta.data;
@@ -320,12 +322,13 @@ miApp.controller("controlPersonaGrilla",function($scope,$http,$state,$auth){
 		console.log("borrar"+persona);
 
 
-
-	$http.delete("http://marcosmurciautn.hol.es/ws1/persona/"+persona.id,{datos:{accion :"borrar",id:persona.id}},{headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+	personasSrv.BorrarPersona(persona.id)
+	//$http.delete("http://marcosmurciautn.hol.es/ws1/persona/"+persona.id,{datos:{accion :"borrar",id:persona.id}},{headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
 	 .then(function(respuesta) {       
 	         //aca se ejetuca si retorno sin errores        
 	         console.log(respuesta.data);
-			 $http.get('http://marcosmurciautn.hol.es/ws1/personas/', { params: {accion :"traer"}})
+			 personasSrv.TraerTodos()
+			 //$http.get('http://marcosmurciautn.hol.es/ws1/personas/', { params: {accion :"traer"}})
 			.then(function(respuesta) {     	
 
 				 $scope.ListadoPersonas = respuesta.data;
@@ -386,7 +389,7 @@ miApp.controller("controlPersonaGrilla",function($scope,$http,$state,$auth){
  	}*/
 });
 
-miApp.controller('controlModificacion', function($scope, $http, $state, $auth, $stateParams, FileUploader)//, $routeParams, $location)
+miApp.controller('controlModificacion', function($scope, $http, $state, $auth, $stateParams, FileUploader, personasSrv)//, $routeParams, $location)
 {
 	if(!$auth.isAuthenticated()){
 		$state.go("login");
@@ -394,7 +397,7 @@ miApp.controller('controlModificacion', function($scope, $http, $state, $auth, $
 
 	$scope.persona={};
 	$scope.DatoTest="**Modificar**";
-	$scope.SubidorDeArchivos=new FileUploader({url:'http://marcosmurciautn.hol.es/ws1/PHP/nexoFoto.php'});
+	$scope.SubidorDeArchivos=new FileUploader({url:personasSrv.TraerUrlFotos()});
 	console.log($stateParams);//$scope.persona=$stateParams;
 	$scope.persona.id=$stateParams.id;
 	$scope.persona.nombre=$stateParams.nombre;
@@ -405,7 +408,8 @@ miApp.controller('controlModificacion', function($scope, $http, $state, $auth, $
 	$scope.persona.foto3=$stateParams.foto3;
 	$scope.SubidorDeArchivos.onSuccessItem=function(item, response, status, headers)
 	{
-		$http.put('http://marcosmurciautn.hol.es/ws1/persona/'+JSON.stringify($scope.persona), { datos: {accion :"modificar"}})
+		personasSrv.ModificarPersona(JSON.stringify($scope.persona));
+		//$http.put('http://marcosmurciautn.hol.es/ws1/persona/'+JSON.stringify($scope.persona), { datos: {accion :"modificar"}})
 		.then(function(respuesta) 
 		{
 			//aca se ejetuca si retorno sin errores      	
@@ -440,7 +444,7 @@ miApp.controller('controlModificacion', function($scope, $http, $state, $auth, $
 	}
 });
 
-miApp.controller('LoginController', function($scope,$state, $http, $auth) {
+miApp.controller('LoginController', function($scope,$state, $http, $auth, usuariosSrv) {
   	
 	$scope.usuario = {};
 	$scope.usuario.clave = "";
@@ -460,9 +464,9 @@ miApp.controller('LoginController', function($scope,$state, $http, $auth) {
 	}
 
   	$scope.IniciarSesion = function(){
-
-  		$http.get('http://marcosmurciautn.hol.es/ws1/usuario/'+$scope.usuario.dni, { 
-  			datos: {accion :"buscar",dni:$scope.usuario.dni}})
+  		usuariosSrv.TraerUsuario($scope.usuario.dni)
+  		//$http.get('http://marcosmurciautn.hol.es/ws1/usuario/'+$scope.usuario.dni, { 
+  		//	datos: {accion :"buscar",dni:$scope.usuario.dni}})
 		  .then(function(respuesta) {     	    	
 			 console.log("Usuario: " + respuesta.data);
 			 if(respuesta.data != "false"){
@@ -515,7 +519,7 @@ miApp.controller('LoginController', function($scope,$state, $http, $auth) {
   	
  });
 
-miApp.controller('RegisterController', function($scope, $http) {
+miApp.controller('RegisterController', function($scope, $http, usuariosSrv) {
   	
   	$scope.dateNow = new Date();
   	console.log($scope.dateNow);
@@ -524,7 +528,9 @@ miApp.controller('RegisterController', function($scope, $http) {
   $scope.Registrar=function(){
   	console.log("usuario a guardar:");
     console.log($scope.usuario);
-	$http.post('http://marcosmurciautn.hol.es/ws1/usuario/', { datos: {accion :"insertar",usuario:$scope.usuario}})
+
+    usuariosSrv.RegistrarUsuario(JSON.stringify($scope.usuario))
+	//$http.post('http://marcosmurciautn.hol.es/ws1/usuario/', { datos: {accion :"insertar",usuario:$scope.usuario}})
 	  .then(function(respuesta) {     	
 			 //aca se ejetuca si retorno sin errores      	
 		 console.log(respuesta.data);
@@ -538,14 +544,15 @@ miApp.controller('RegisterController', function($scope, $http) {
 	$scope.jugador.estadoC="empty";*/
  });
 
-miApp.controller("ControlUsuariosGrilla",function($scope,$http,$state,$auth){
+miApp.controller("ControlUsuariosGrilla",function($scope,$http,$state,$auth,usuariosSrv){
 	if(!$auth.isAuthenticated()){
 		$state.go("login");
 	}
 
   	$scope.DatoTest="**grilla usuarios**";
  	
- 	$http.get('http://marcosmurciautn.hol.es/ws1/usuarios', { params: {accion :"traer"}})
+ 	usuariosSrv.TraerTodos()
+ 	//$http.get('http://marcosmurciautn.hol.es/ws1/usuarios', { params: {accion :"traer"}})
  	.then(function(respuesta) {     	
 
       	 $scope.ListadoUsuarios = respuesta.data;
@@ -559,11 +566,13 @@ miApp.controller("ControlUsuariosGrilla",function($scope,$http,$state,$auth){
  	$scope.Borrar=function(usuario){
 		console.log("borrar"+usuario);
 
-	$http.delete("http://marcosmurciautn.hol.es/ws1/usuario/"+usuario.id,{datos:{accion :"borrar",id:usuario.id}},{headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+	usuariosSrv.BorrarUsuario(usuario.id)
+	//$http.delete("http://marcosmurciautn.hol.es/ws1/usuario/"+usuario.id,{datos:{accion :"borrar",id:usuario.id}},{headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
 	 .then(function(respuesta) {       
 	         //aca se ejetuca si retorno sin errores        
 	         console.log(respuesta.data);
-			 $http.get('http://marcosmurciautn.hol.es/ws1/usuarios', { params: {accion :"traer"}})
+	         usuariosSrv.TraerTodos()
+			 //$http.get('http://marcosmurciautn.hol.es/ws1/usuarios', { params: {accion :"traer"}})
 			.then(function(respuesta) {     	
 
 				 $scope.ListadoUsuarios = respuesta.data;

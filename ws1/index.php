@@ -54,8 +54,8 @@ $app->get('/usuario[/{dni}]', function ($request, $response, $args) {
 });
 
 /* POST: Para crear recursos */
-$app->post('/usuario/{dni}', function ($request, $response, $args) {
-    $response->write(Usuario::TraerUnUsuario($args['dni']));
+$app->post('/usuario/{usuario}', function ($request, $response, $args) {
+    $response->write(json_encode(Usuario::InsertarUsuario($args['usuario'])));
     return $response;
 });
 
