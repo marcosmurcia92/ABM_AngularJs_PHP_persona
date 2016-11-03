@@ -1,0 +1,46 @@
+<div class="container">
+		<div class="page-header" align=center>
+			<center><h1>Primer Parcial Murcia LabIV</h1> </center>   
+			<br>
+  			<button ui-sref="inicio()">Volver Al Inicio</button>      
+		</div>
+	  	 
+		           
+					<div class="CajaInicio animated bounceInRight">
+							<h1>Listado de Usuarios</h1>
+								
+								<table class='table table-hover table-responsive' id="listaUsuarios">
+									<thead>
+										<tr>
+											<th>  Email   </th>				
+											<th>  Dni     </th>
+											<th>  Password   </th>
+											<th>  BORRAR     </th>
+										</tr> 
+									</thead>
+									<tr ng-repeat="usuario in ListadoUsuarios">
+							
+										<td>{{usuario.email}}</td>
+										<td>{{usuario.dni}}</td>
+										<td>{{usuario.pass}}</td>
+
+										<td><button class='btn btn-danger' name='Borrar' ng-click="Borrar(usuario)">   <span class='glyphicon glyphicon-remove-circle'>&nbsp;</span>Borrar</button></td>
+															
+									</tr>
+									<!--tr ng-if="resultado.length==0">
+
+										<td></td>
+							
+										<td>No hay personas con ese criterio</td>
+										<td></td>
+										<td></td>
+
+										<td></td>
+										
+										<td></td>
+															
+									</tr-->
+								</table>
+							</div>
+							
+						</div>

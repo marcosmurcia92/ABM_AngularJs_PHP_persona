@@ -2,8 +2,8 @@ var miApp = angular.module("AngularABM",['ui.router','angularFileUpload','satell
 
 miApp.config(function($stateProvider,$urlRouterProvider,$authProvider){
 
-	$authProvider.loginUrl= 'ABM_AngularJs_PHP_persona/jwt/php/auth.php';
-	$authProvider.tokenName = 'MiTokenGeneradoEnPHP';
+	$authProvider.loginUrl= 'http://marcosmurciautn.hol.es/ws1/PHP/server/jwt/php/auth.php';
+	$authProvider.tokenName = 'MurciaLoginToken';
 	$authProvider.tokenPrefix = 'Aplicacion';
 	$authProvider.authHeader = 'data';
 
@@ -36,6 +36,14 @@ miApp.config(function($stateProvider,$urlRouterProvider,$authProvider){
 				url:'/register',
 				templateUrl:'register.html',
 				controller:"RegisterController"
+			}
+		)
+		.state(
+			"usuarios",
+			{
+				url:'/usuarios',
+				templateUrl:'usuarioGrilla.html',
+				controller:"ControlUsuariosGrilla"
 			}
 		)
 		.state(
@@ -207,7 +215,7 @@ miApp.controller("controlPersonaAlta",function($scope,$state,$auth,$http,FileUpl
   
 
 //inicio las variables
-  $scope.SubidorDeArchivos=new FileUploader({url:'PHP/nexoFoto.php'});
+  $scope.SubidorDeArchivos=new FileUploader({url:'http://marcosmurciautn.hol.es/ws1/PHP/nexoFoto.php'});
   $scope.SubidorDeArchivos.queueLimit = 3;
   $scope.persona={};
   $scope.persona.nombre= "" ;
@@ -225,7 +233,7 @@ miApp.controller("controlPersonaAlta",function($scope,$state,$auth,$http,FileUpl
 
   $scope.SubidorDeArchivos.onCompleteAll =function()
   {
-	$http.post('PHP/nexoInsertar.php', { datos: {accion :"insertar",persona:$scope.persona}})
+	$http.post('http://marcosmurciautn.hol.es/ws1/persona/'+ JSON.stringify($scope.persona))
 	  .then(function(respuesta) {     	
 			 //aca se ejetuca si retorno sin errores      	
 		 console.log(respuesta.data);
@@ -276,10 +284,10 @@ miApp.controller("controlPersonaGrilla",function($scope,$http,$state,$auth){
 
   	$scope.DatoTest="**grilla**";
  	
- 	$http.get('PHP/nexoTraer.php', { params: {accion :"traer"}})
+ 	$http.get('http://marcosmurciautn.hol.es/ws1/personas/', { params: {accion :"traer"}})
  	.then(function(respuesta) {     	
 
-      	 $scope.ListadoPersonas = respuesta.data.listado;
+      	 $scope.ListadoPersonas = respuesta.data;
       	 console.log(respuesta.data);
 
     },function errorCallback(response) {
@@ -313,14 +321,14 @@ miApp.controller("controlPersonaGrilla",function($scope,$http,$state,$auth){
 
 
 
-	$http.post("PHP/nexoBorrar.php",{datos:{accion :"borrar",persona:persona}},{headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+	$http.delete("http://marcosmurciautn.hol.es/ws1/persona/"+persona.id,{datos:{accion :"borrar",id:persona.id}},{headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
 	 .then(function(respuesta) {       
 	         //aca se ejetuca si retorno sin errores        
 	         console.log(respuesta.data);
-			 $http.get('PHP/nexoTraer.php', { params: {accion :"traer"}})
+			 $http.get('http://marcosmurciautn.hol.es/ws1/personas/', { params: {accion :"traer"}})
 			.then(function(respuesta) {     	
 
-				 $scope.ListadoPersonas = respuesta.data.listado;
+				 $scope.ListadoPersonas = respuesta.data;
 				 console.log(respuesta.data);
 
 			},function errorCallback(response) {
@@ -386,7 +394,7 @@ miApp.controller('controlModificacion', function($scope, $http, $state, $auth, $
 
 	$scope.persona={};
 	$scope.DatoTest="**Modificar**";
-	$scope.SubidorDeArchivos=new FileUploader({url:'PHP/nexoFoto.php'});
+	$scope.SubidorDeArchivos=new FileUploader({url:'http://marcosmurciautn.hol.es/ws1/PHP/nexoFoto.php'});
 	console.log($stateParams);//$scope.persona=$stateParams;
 	$scope.persona.id=$stateParams.id;
 	$scope.persona.nombre=$stateParams.nombre;
@@ -397,7 +405,7 @@ miApp.controller('controlModificacion', function($scope, $http, $state, $auth, $
 	$scope.persona.foto3=$stateParams.foto3;
 	$scope.SubidorDeArchivos.onSuccessItem=function(item, response, status, headers)
 	{
-		$http.post('PHP/nexoModificar.php', { datos: {accion :"modificar",persona:$scope.persona}})
+		$http.put('http://marcosmurciautn.hol.es/ws1/persona/'+JSON.stringify($scope.persona), { datos: {accion :"modificar"}})
 		.then(function(respuesta) 
 		{
 			//aca se ejetuca si retorno sin errores      	
@@ -432,11 +440,14 @@ miApp.controller('controlModificacion', function($scope, $http, $state, $auth, $
 	}
 });
 
-miApp.controller('LoginController', function($scope, $http, $auth) {
+miApp.controller('LoginController', function($scope,$state, $http, $auth) {
   	
 	$scope.usuario = {};
-	$scope.usuario.clave = "la clave";
-	$scope.usuario.correo = "el correo";
+	$scope.usuario.clave = "";
+	$scope.usuario.dni = "";
+	$scope.usuario.correo = "";
+	$scope.errorExistente = false;
+	$scope.errorAdmin = false;
 
 	$scope.isAuthenticated = $auth.isAuthenticated();
 
@@ -449,14 +460,37 @@ miApp.controller('LoginController', function($scope, $http, $auth) {
 	}
 
   	$scope.IniciarSesion = function(){
-  		//ESTO ES UNA LLAMADA TIPO HTTP
-  		$auth.login($scope.usuario)
-		  .then(function(response) {
-		  	console.info("Correcto",response);
-		  })
-		  .catch(function(response) {
-		  	console.info("Error",response);
+
+  		$http.get('http://marcosmurciautn.hol.es/ws1/usuario/'+$scope.usuario.dni, { 
+  			datos: {accion :"buscar",dni:$scope.usuario.dni}})
+		  .then(function(respuesta) {     	    	
+			 console.log("Usuario: " + respuesta.data);
+			 if(respuesta.data != "false"){
+				 	$auth.login($scope.usuario)
+				  .then(function(response) {
+				  	console.info("Correcto",response);
+				  	if(!response.data.MurciaLoginToken){
+				  		console.log("NO ES ADMIN");
+				  		$scope.errorAdmin= true;
+				  	}else{
+				  		$state.go("inicio");
+				  	}
+				  	
+				  })
+				  .catch(function(response) {
+				  	console.info("Error",response);
+
+				  });
+			}else{
+				$scope.errorExistente = true;   
+			}
+
+		},function errorCallback(response) {     		
+				//aca se ejecuta cuando hay errores
+				console.log( response); 
+				$scope.errorExistente = true;    			
 		  });
+  		
   	}
 
   	$scope.LoginGitHub = function(){
@@ -468,6 +502,16 @@ miApp.controller('LoginController', function($scope, $http, $auth) {
           console.info("ERROR",error);
         });
   	}
+
+  	$scope.LogOut = function()
+  	{
+  		$auth.logout();
+  		$state.reload();
+  	}
+
+  	$scope.GoToMenu = function(){
+		$state.go("inicio");
+  	}
   	
  });
 
@@ -475,9 +519,67 @@ miApp.controller('RegisterController', function($scope, $http) {
   	
   	$scope.dateNow = new Date();
   	console.log($scope.dateNow);
+
+
+  $scope.Registrar=function(){
+  	console.log("usuario a guardar:");
+    console.log($scope.usuario);
+	$http.post('http://marcosmurciautn.hol.es/ws1/usuario/', { datos: {accion :"insertar",usuario:$scope.usuario}})
+	  .then(function(respuesta) {     	
+			 //aca se ejetuca si retorno sin errores      	
+		 console.log(respuesta.data);
+
+	},function errorCallback(response) {     		
+			//aca se ejecuta cuando hay errores
+			console.log( response);     			
+	  });
+  }
 	/*$scope.jugador={};
 	$scope.jugador.estadoC="empty";*/
  });
+
+miApp.controller("ControlUsuariosGrilla",function($scope,$http,$state,$auth){
+	if(!$auth.isAuthenticated()){
+		$state.go("login");
+	}
+
+  	$scope.DatoTest="**grilla usuarios**";
+ 	
+ 	$http.get('http://marcosmurciautn.hol.es/ws1/usuarios', { params: {accion :"traer"}})
+ 	.then(function(respuesta) {     	
+
+      	 $scope.ListadoUsuarios = respuesta.data;
+      	 console.log(respuesta.data);
+
+    },function errorCallback(response) {
+     		 $scope.ListadoUsuarios= [];
+     		console.log( response);
+ 	 });
+
+ 	$scope.Borrar=function(usuario){
+		console.log("borrar"+usuario);
+
+	$http.delete("http://marcosmurciautn.hol.es/ws1/usuario/"+usuario.id,{datos:{accion :"borrar",id:usuario.id}},{headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+	 .then(function(respuesta) {       
+	         //aca se ejetuca si retorno sin errores        
+	         console.log(respuesta.data);
+			 $http.get('http://marcosmurciautn.hol.es/ws1/usuarios', { params: {accion :"traer"}})
+			.then(function(respuesta) {     	
+
+				 $scope.ListadoUsuarios = respuesta.data;
+				 console.log(respuesta.data);
+
+			},function errorCallback(response) {
+					 $scope.ListadoUsuarios= [];
+					console.log( response);
+			 });
+
+    },function errorCallback(response) {       
+        console.log( response);           
+    });
+ 	}
+
+});
 
 miApp.controller('controlJuegosMenu', function($scope,$state,$auth, $http) {
   

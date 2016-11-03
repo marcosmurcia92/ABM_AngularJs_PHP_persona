@@ -1,0 +1,12 @@
+{
+    "name": "vendor/ws",
+    "authors": [
+        {
+            "name": "mario",
+            "email": "mariorampi@gmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "3"
+    }
+}
